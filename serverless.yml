@@ -1,0 +1,47 @@
+service: slackbot # NOTE: update this with your service name
+provider:
+  name: aws
+  runtime: rust
+  memorySize: 128
+  stage: dev
+  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+package:
+  individually: true
+
+plugins:
+  - serverless-rust
+
+functions:
+  pollCommand:
+    handler: poll.command
+    events:
+      - http:
+          path: /poll/command
+          method: POST
+  pollInteraction:
+    handler: poll.interaction
+    events:
+      - http:
+          path: /poll/interaction
+          method: POST
